@@ -39,6 +39,11 @@
 #include <IOKit/IOTypes.h>
 #include <libkern/c++/OSContainers.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 extern const OSSymbol * gIONameKey;
 extern const OSSymbol * gIOLocationKey;
@@ -146,6 +151,7 @@ public:
 
     virtual IORegistryEntry * copyChildEntry( const IORegistryPlane * plane ) const;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     /* method available in Mac OS X 10.4 or later */
 /*!
     @typedef Action
@@ -178,6 +184,7 @@ member function's parameter list.
     virtual IOReturn runPropertyAction(Action action, OSObject *target,
 			       void *arg0 = 0, void *arg1 = 0,
 			       void *arg2 = 0, void *arg3 = 0);
+#endif
 
 private:
 #if __LP64__
@@ -193,7 +200,11 @@ private:
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 2);
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 3);
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 4);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 5);
+#else
+    OSMetaClassDeclareReservedUnused(IORegistryEntry, 5);
+#endif
 #endif
     OSMetaClassDeclareReservedUnused(IORegistryEntry, 6);
     OSMetaClassDeclareReservedUnused(IORegistryEntry, 7);

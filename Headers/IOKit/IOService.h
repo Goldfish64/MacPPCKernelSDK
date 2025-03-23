@@ -348,6 +348,7 @@ public:
 
     virtual bool didTerminate( IOService * provider, IOOptionBits options, bool * defer );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 /*! @function nextIdleTimeout
     @availability Mac OS X v10.4 and later
     @abstract Allows subclasses to customize idle power management behavior.
@@ -361,6 +362,7 @@ public:
 
     virtual SInt32 nextIdleTimeout(AbsoluteTime currentTime, 
         AbsoluteTime lastActivity, unsigned int powerState);
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 /*! @function systemWillShutdown
@@ -390,7 +392,11 @@ private:
     OSMetaClassDeclareReservedUnused(IOService, 0);
     OSMetaClassDeclareReservedUnused(IOService, 1);
     OSMetaClassDeclareReservedUnused(IOService, 2);
-    OSMetaClassDeclareReservedUnused(IOService, 3);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
+	OSMetaClassDeclareReservedUsed(IOService, 3);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 3);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	OSMetaClassDeclareReservedUsed(IOService, 4);
 #else
@@ -405,7 +411,11 @@ private:
     OSMetaClassDeclareReservedUsed(IOService, 0);
     OSMetaClassDeclareReservedUsed(IOService, 1);
     OSMetaClassDeclareReservedUsed(IOService, 2);
-    OSMetaClassDeclareReservedUsed(IOService, 3);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
+	OSMetaClassDeclareReservedUsed(IOService, 3);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 3);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	OSMetaClassDeclareReservedUsed(IOService, 4);
 #else
