@@ -60,6 +60,23 @@ typedef void (*ipi_handler_t)(void);
 /* Type for the Time Base Enable function */
 typedef void (*time_base_enable_t)(cpu_id_t cpu_id, boolean_t enable);
 
+/* Struct for ml_processor_register */
+struct ml_processor_info {
+	cpu_id_t			cpu_id;
+	boolean_t			boot_cpu;
+	vm_offset_t			start_paddr;
+	boolean_t			supports_nap;
+	unsigned long		l2cr_value;
+	time_base_enable_t	time_base_enable;
+};
+
+typedef struct ml_processor_info ml_processor_info_t;
+
+/* Register a processor */
+kern_return_t ml_processor_register(
+	ml_processor_info_t *processor_info,
+	processor_t *processor,
+	ipi_handler_t *ipi_handler);
 
 __END_DECLS
 
