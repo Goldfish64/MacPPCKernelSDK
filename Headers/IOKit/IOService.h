@@ -765,6 +765,7 @@ public:
     static IOService * waitForService( OSDictionary * matching,
                             mach_timespec_t * timeout = 0);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function waitForMatchingService
     @abstract Waits for a matching to service to be published.
     @discussion Provides a method of waiting for an IOService object matching the supplied matching dictionary to be registered and fully matched. 
@@ -774,6 +775,7 @@ public:
 
     static IOService * waitForMatchingService( OSDictionary * matching,
                             uint64_t timeout = UINT64_MAX);
+#endif
 
 /*! @function getMatchingServices
     @abstract Finds the set of current published IOService objects matching a matching dictionary.
