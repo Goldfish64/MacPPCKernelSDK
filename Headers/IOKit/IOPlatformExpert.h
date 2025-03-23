@@ -261,7 +261,9 @@ public:
 					       IOByteCount length);
 
     virtual IOByteCount savePanicInfo(UInt8 *buffer, IOByteCount length);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual OSString* createSystemSerialNumberString(OSData* myProperty);
+#endif
 
     OSMetaClassDeclareReservedUnused(IODTPlatformExpert,  0);
     OSMetaClassDeclareReservedUnused(IODTPlatformExpert,  1);
