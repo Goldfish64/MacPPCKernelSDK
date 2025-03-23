@@ -54,7 +54,11 @@ extern boolean_t	ml_set_interrupts_enabled(
 extern boolean_t	ml_at_interrupt_context(
 						void);
 
+/* Type for the IPI Hander */
+typedef void (*ipi_handler_t)(void);
 
+/* Type for the Time Base Enable function */
+typedef void (*time_base_enable_t)(cpu_id_t cpu_id, boolean_t enable);
 
 
 __END_DECLS
