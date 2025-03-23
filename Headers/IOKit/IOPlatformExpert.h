@@ -47,6 +47,12 @@ extern "C" {
 
 #include <libkern/OSTypes.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 extern boolean_t PEGetMachineName( char * name, int maxLength );
 extern boolean_t PEGetModelName( char * name, int maxLength );
 extern int PEGetPlatformEpoch( void );
@@ -168,10 +174,16 @@ public:
 
     virtual IOByteCount savePanicInfo(UInt8 *buffer, IOByteCount length);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual OSString* createSystemSerialNumberString(OSData* myProperty);
+#endif
     
     OSMetaClassDeclareReservedUsed(IOPlatformExpert,  0);
-    OSMetaClassDeclareReservedUsed(IOPlatformExpert,  1);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
+	OSMetaClassDeclareReservedUsed(IOPlatformExpert, 1);
+#else
+	OSMetaClassDeclareReservedUnused(IOPlatformExpert, 1);
+#endif
     OSMetaClassDeclareReservedUnused(IOPlatformExpert,  2);
     OSMetaClassDeclareReservedUnused(IOPlatformExpert,  3);
     OSMetaClassDeclareReservedUnused(IOPlatformExpert,  4);
