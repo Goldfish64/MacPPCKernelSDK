@@ -30,6 +30,17 @@
 
 #include <IOKit/IOCommand.h>
 #include <IOKit/IOMemoryDescriptor.h>
+
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_4
+#error IODMACommand not supported before Mac OS X 10.4
+#endif
+
 class IOMapper;
 
 /**************************** class IODMACommand ***************************/
