@@ -30,6 +30,12 @@
 
 #include <IOKit/IOMemoryDescriptor.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 enum {
     kIOMemoryPhysicallyContiguous	= 0x00000010,
     kIOMemoryPageable	      		= 0x00000020,
@@ -133,6 +139,7 @@ public:
                                                     vm_size_t    capacity,
                                                     vm_offset_t  alignment = 1);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 /*! @function inTaskWithOptions
     @abstract Creates a memory buffer with memory descriptor for that buffer. 
     @discussion Added in Mac OS X 10.2, this method allocates a memory buffer with a given size and alignment in the task's address space specified, and returns a memory descriptor instance representing the memory. It is recommended that memory allocated for I/O or sharing via mapping be created via IOBufferMemoryDescriptor. Options passed with the request specify the kind of memory to be allocated - pageablity and sharing are specified with option bits. This function may block and so should not be called from interrupt level or while a simple lock is held.
@@ -152,7 +159,9 @@ public:
                                             IOOptionBits options,
                                             vm_size_t    capacity,
                                             vm_offset_t  alignment = 1);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 /*! @function inTaskWithPhysicalMask
     @abstract Creates a memory buffer with memory descriptor for that buffer. 
     @discussion Added in Mac OS X 10.5, this method allocates a memory buffer with a given size and alignment in the task's address space specified, and returns a memory descriptor instance representing the memory. It is recommended that memory allocated for I/O or sharing via mapping be created via IOBufferMemoryDescriptor. Options passed with the request specify the kind of memory to be allocated - pageablity and sharing are specified with option bits. This function may block and so should not be called from interrupt level or while a simple lock is held.
@@ -170,6 +179,7 @@ public:
                                             IOOptionBits      options,
                                             mach_vm_size_t    capacity,
                                             mach_vm_address_t physicalMask);
+#endif
 
     /*
      * withCapacity:
