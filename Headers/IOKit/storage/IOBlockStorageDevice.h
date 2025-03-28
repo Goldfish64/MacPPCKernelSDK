@@ -33,6 +33,12 @@
 #include <IOKit/IOTypes.h>
 #include <IOKit/storage/IOStorageDeviceCharacteristics.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 /*!
  * @defined kIOBlockStorageDeviceClass
  * @abstract
@@ -148,19 +154,50 @@ public:
      */    
     virtual bool	init(OSDictionary * properties);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual OSObject *	getProperty(const OSSymbol * key) const;
 
     virtual IOReturn	setProperties(OSObject * properties);
+#endif
 
     /* --- A subclass must implement the the following methods: --- */
 
 #ifndef __LP64__
-    virtual IOReturn	doAsyncReadWrite(IOMemoryDescriptor *buffer,
-                                            UInt32 block, UInt32 nblks,
-                                            IOStorageCompletion completion) __attribute__ ((deprecated));
+/*!
+     * @function doAsyncReadWrite
+     * @abstract
+     * Start an asynchronous read or write operation.
+     * @param buffer
+     * An IOMemoryDescriptor describing the data-transfer buffer. The data direction
+     * is contained in the IOMemoryDescriptor. Responsiblity for releasing the descriptor
+     * rests with the caller.
+     * @param block
+     * The starting block number of the data transfer.
+     * @param nblks
+     * The integral number of blocks to be transferred.
+     * @param completion
+     * The completion routine to call once the data transfer is complete.
+     */
 
+     virtual IOReturn	doAsyncReadWrite(IOMemoryDescriptor *buffer,
+                                            UInt32 block,UInt32 nblks,
+                                            IOStorageCompletion completion)	= 0;
+
+    /*!
+    * @function doSyncReadWrite
+    * @abstract
+    * Perform a synchronous read or write operation.
+    * @param buffer
+    * An IOMemoryDescriptor describing the data-transfer buffer. The data direction
+    * is contained in the IOMemoryDescriptor. Responsiblity for releasing the descriptor
+    * rests with the caller.
+    * @param block
+    * The starting block number of the data transfer.
+    * @param nblks
+    * The integral number of blocks to be transferred.
+    */    
     virtual IOReturn	doSyncReadWrite(IOMemoryDescriptor *buffer,
-                                    UInt32 block,UInt32 nblks) __attribute__ ((deprecated));
+                                            UInt32 block,UInt32 nblks)			= 0;
 #endif /* !__LP64__ */
 
     /*!
@@ -287,10 +324,36 @@ public:
     virtual IOReturn	reportLockability(bool *isLockable)	= 0;
 
 #ifndef __LP64__
-    virtual IOReturn	reportMaxReadTransfer(UInt64 blockSize,UInt64 *max) __attribute__ ((deprecated));
+    /*!
+     * @function reportMaxReadTransfer
+     * @abstract
+     * Report the maximum allowed byte transfer for read operations.
+     * @discussion
+     * Some devices impose a maximum data transfer size. Because this limit
+     * may be determined by the size of a block-count field in a command, the limit may
+     * depend on the block size of the transfer.
+     * @param blockSize
+     * The block size desired for the transfer.
+     * @param max
+     * Pointer to returned result.
+     */
+    virtual IOReturn	reportMaxReadTransfer (UInt64 blockSize, UInt64 *max)	= 0;
 
-    virtual IOReturn	reportMaxWriteTransfer(UInt64 blockSize,UInt64 *max) __attribute__ ((deprecated));
-#endif /* !__LP64__ */
+    /*!
+     * @function reportMaxWriteTransfer
+     * @abstract
+     * Report the maximum allowed byte transfer for write operations.
+     * @discussion
+     * Some devices impose a maximum data transfer size. Because this limit
+     * may be determined by the size of a block-count field in a command, the limit may
+     * depend on the block size of the transfer.
+     * @param blockSize
+     * The block size desired for the transfer.
+     * @param max
+     * Pointer to returned result.
+     */
+    virtual IOReturn	reportMaxWriteTransfer(UInt64 blockSize,UInt64 *max)	= 0;
+#endif
 
     /*!
      * @function reportMaxValidBlock
@@ -365,12 +428,31 @@ public:
      */
     virtual IOReturn	reportWriteProtection(bool *isWriteProtected)	= 0;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 #ifndef __LP64__
-    virtual IOReturn	doAsyncReadWrite(IOMemoryDescriptor *buffer,
-                                            UInt64 block, UInt64 nblks,
-                                            IOStorageCompletion completion) __attribute__ ((deprecated));
-#endif /* !__LP64__ */
+    /*!
+     * @function doAsyncReadWrite
+     * @abstract
+     * Start an asynchronous read or write operation.
+     * @param buffer
+     * An IOMemoryDescriptor describing the data-transfer buffer. The data direction
+     * is contained in the IOMemoryDescriptor. Responsiblity for releasing the descriptor
+     * rests with the caller.
+     * @param block
+     * The starting block number of the data transfer.
+     * @param nblks
+     * The integral number of blocks to be transferred.
+     * @param completion
+     * The completion routine to call once the data transfer is complete.
+     */
 
+    virtual IOReturn	doAsyncReadWrite(IOMemoryDescriptor *buffer,
+                                            UInt64 block,UInt64 nblks,
+                                            IOStorageCompletion completion);
+#endif
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     /*!
      * @function getWriteCacheState
      * @abstract
@@ -403,7 +485,9 @@ public:
 #else /* !__LP64__ */
     virtual IOReturn	setWriteCacheState(bool enabled); /* 10.3.0 */
 #endif /* !__LP64__ */
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     /*!
      * @function doAsyncReadWrite
      * @abstract
@@ -432,7 +516,9 @@ public:
                                             IOStorageAttributes *attributes,
                                             IOStorageCompletion *completion); /* 10.5.0 */
 #endif /* !__LP64__ */
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
     /*!
      * @function requestIdle
      * @abstract
@@ -455,6 +541,7 @@ public:
      * The integral number of blocks to be deleted.
      */
     virtual IOReturn doDiscard(UInt64 block, UInt64 nblks); /* 10.6.0 */
+#endif
 
 #ifdef __LP64__
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  0);
@@ -464,12 +551,30 @@ public:
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  4);
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  5);
 #else /* !__LP64__ */
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  0);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  0);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  1);
     OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  2);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  1);
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  2);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  3);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  3);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
     OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  4);
     OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  5);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  4);
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  5);
+#endif
 #endif /* !__LP64__ */
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  6);
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  7);
