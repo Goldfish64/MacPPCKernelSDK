@@ -53,6 +53,19 @@ typedef int wait_result_t;
 #define THREAD_TIMED_OUT	1		/* timeout expired */
 #define THREAD_INTERRUPTED	2		/* aborted/interrupted */
 #define THREAD_RESTART		3		/* restart operation entirely */
+
+typedef boolean_t				(*thread_roust_t)(thread_t, wait_result_t);
+#define THREAD_ROUST_NULL	 	((thread_roust_t) 0)
+
+/*
+ *	Possible wait_result_t values.
+ */
+typedef int wait_result_t;
+#define THREAD_WAITING		-1		/* thread is waiting */
+#define THREAD_AWAKENED		0		/* normal wakeup */
+#define THREAD_TIMED_OUT	1		/* timeout expired */
+#define THREAD_INTERRUPTED	2		/* aborted/interrupted */
+#define THREAD_RESTART		3		/* restart operation entirely */
 #define THREAD_NOT_WAITING      10              /* thread didn't need to wait */
 
 typedef	void (*thread_continue_t)(void *, wait_result_t);

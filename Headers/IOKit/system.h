@@ -51,7 +51,7 @@ __BEGIN_DECLS
 #include <kern/debug.h>
 #include <kern/task.h>
 #include <kern/sched_prim.h>
-#include <kern/locks.h>
+#include <kern/lock.h>
 #include <kern/queue.h>
 #include <kern/ipc_mig.h>
 #include <libkern/libkern.h>

@@ -107,6 +107,58 @@ extern void             nanoseconds_to_absolutetime(
 							uint64_t		nanoseconds,
 							uint64_t		*result);
 
+#if		!defined(MACH_KERNEL_PRIVATE) && !defined(ABSOLUTETIME_SCALAR_TYPE)
+
+#include <libkern/OSBase.h>
+
+#define clock_get_uptime(a)		\
+	clock_get_uptime(__OSAbsoluteTimePtr(a))
+
+#define clock_interval_to_deadline(a, b, c)		\
+	clock_interval_to_deadline((a), (b), __OSAbsoluteTimePtr(c))
+
+#define clock_interval_to_absolutetime_interval(a, b, c)	\
+	clock_interval_to_absolutetime_interval((a), (b), __OSAbsoluteTimePtr(c))
+
+#define clock_absolutetime_interval_to_deadline(a, b)	\
+	clock_absolutetime_interval_to_deadline(__OSAbsoluteTime(a), __OSAbsoluteTimePtr(b))
+
+#define clock_deadline_for_periodic_event(a, b, c)	\
+	clock_deadline_for_periodic_event(__OSAbsoluteTime(a), __OSAbsoluteTime(b), __OSAbsoluteTimePtr(c))
+
+#define clock_delay_until(a)	\
+	clock_delay_until(__OSAbsoluteTime(a))
+
+#define absolutetime_to_nanoseconds(a, b)	\
+	absolutetime_to_nanoseconds(__OSAbsoluteTime(a), (b))
+
+#define nanoseconds_to_absolutetime(a, b)	\
+	nanoseconds_to_absolutetime((a), __OSAbsoluteTimePtr(b))
+
+#define AbsoluteTime_to_scalar(x)	(*(uint64_t *)(x))
+
+/* t1 < = > t2 */
+#define CMP_ABSOLUTETIME(t1, t2)				\
+	(AbsoluteTime_to_scalar(t1) >				\
+		AbsoluteTime_to_scalar(t2)? (int)+1 :	\
+	 (AbsoluteTime_to_scalar(t1) <				\
+		AbsoluteTime_to_scalar(t2)? (int)-1 : 0))
+
+/* t1 += t2 */
+#define ADD_ABSOLUTETIME(t1, t2)				\
+	(AbsoluteTime_to_scalar(t1) +=				\
+				AbsoluteTime_to_scalar(t2))
+
+/* t1 -= t2 */
+#define SUB_ABSOLUTETIME(t1, t2)				\
+	(AbsoluteTime_to_scalar(t1) -=				\
+				AbsoluteTime_to_scalar(t2))
+
+#define ADD_ABSOLUTETIME_TICKS(t1, ticks)		\
+	(AbsoluteTime_to_scalar(t1) +=				\
+						(int32_t)(ticks))
+
+#endif
 
 __END_DECLS
 
