@@ -29,6 +29,12 @@
 #include <IOKit/graphics/IOFramebufferShared.h>
 #include <IOKit/IOLib.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOFramebuffer;
 class IOBufferMemoryDescriptor;
 
@@ -255,6 +261,7 @@ private:
     struct IOFramebufferPrivate *       __private;
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 /*! @function doI2CRequest
     @abstract Carry out an I2C request.
     @discussion IOFramebuffer subclasses may optionally implement this method to perform I2C bus requests on one of the buses they support. Alternatively they may implement the setDDCClock(), setDDCData(), readDDCClock(), readDDCData() methods and respond from getAttributeForConnection() to the kConnectionSupportsLLDDCSense attribute with success, in which case IOFramebuffer::doI2CRequest() will carry out a software implementation of I2C using the low level routines and conforming to the timing constraints passed in the timing parameter. Subclasses may pass timing parameters tuned for the specific bus, otherwise VESA DDC defaults will apply.
@@ -263,9 +270,14 @@ public:
     @result an IOReturn code. If kIOReturnSuccces, the result of the transaction is returned in the requests result field.
 */
     virtual IOReturn doI2CRequest( UInt32 bus, struct IOI2CBusTiming * timing, struct IOI2CRequest * request );
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOFramebuffer, 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOFramebuffer, 0);
+#endif
 
     OSMetaClassDeclareReservedUnused(IOFramebuffer, 1);
     OSMetaClassDeclareReservedUnused(IOFramebuffer, 2);
