@@ -45,6 +45,12 @@
 #include <IOKit/usb/IOUSBCommand.h>
 #include <IOKit/usb/IOUSBWorkLoop.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 
 //================================================================================================
 //
@@ -999,6 +1005,7 @@ public:
     
     virtual IOReturn GetRootHubStringDescriptor(UInt8	index, OSData *desc) = 0;
     
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOUSBController,  15);
     /*!
         @function IsocIO
@@ -1046,8 +1053,12 @@ public:
                                                         UInt32			frameCount,
                                                         IOUSBLowLatencyIsocFrame *pFrames,
                                                         UInt32			updateFrequency);
+#else
+    OSMetaClassDeclareReservedUnused(IOUSBController,  15);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  16);
+#endif
 
-
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IOUSBController,  17);
     virtual IOReturn 		CheckForDisjointDescriptor(IOUSBCommand *command, UInt16 maxPacketSize);
     
@@ -1058,6 +1069,10 @@ public:
 	 */
     OSMetaClassDeclareReservedUsed(IOUSBController,  18);
 	virtual IOReturn UIMCreateIsochTransfer(IOUSBIsocCommand *command);
+#else
+    OSMetaClassDeclareReservedUnused(IOUSBController,  17);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  18);
+#endif
 	
 	// do not use this slot without first checking bug rdar://6022420
     OSMetaClassDeclareReservedUnused(IOUSBController,  19);

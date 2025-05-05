@@ -27,8 +27,16 @@
 #include <IOKit/IOCommand.h>
 #include <IOKit/IOCommandPool.h>
 #include <IOKit/IOMemoryDescriptor.h>
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 #include <IOKit/IODMACommand.h>
+#endif
 #include <IOKit/usb/USB.h>
+
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 /*
  * USB Command
@@ -92,9 +100,11 @@ protected:
         bool				_useTimeStamp;
         AbsoluteTime		_timeStamp;
 		bool				_isSyncTransfer;						// Returns true if the command is used for a synchronous transfer
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 		IODMACommand		*_dmaCommand;							// used to get memory mapping
 		IOUSBCommand		*_bufferUSBCommand;						// points to another IOUSBCommand used for phase 2 of control transactions
 		IOUSBCommand		*_masterUSBCommand;						// points from the bufferUSBCommand back to the parent command
+#endif
     };
     ExpansionData * 		_expansionData;
     
@@ -135,8 +145,10 @@ public:
     void					SetUseTimeStamp(bool);
     void					SetTimeStamp(AbsoluteTime timeStamp);
 	void					SetIsSyncTransfer(bool);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	inline void				SetDMACommand(IODMACommand *dmaCommand)					{ _expansionData->_dmaCommand = dmaCommand; }
 	void					SetBufferUSBCommand(IOUSBCommand *bufferUSBCommand);
+#endif
 	
 	// Accessors
     usbCommand					GetSelector(void);
@@ -166,8 +178,10 @@ public:
     bool						GetUseTimeStamp(void);
     AbsoluteTime				GetTimeStamp(void);
 	bool						GetIsSyncTransfer(void);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	inline IODMACommand *		GetDMACommand(void)							{return _expansionData->_dmaCommand; }
 	inline IOUSBCommand *		GetBufferUSBCommand(void)					{return _expansionData->_bufferUSBCommand; }
+#endif
 };
 
 
@@ -194,9 +208,11 @@ protected:
         AbsoluteTime		_timeStamp;
 		bool				_isSyncTransfer;								// Returns true if the command is used for a synchronous transfer
 		bool				_rosettaClient;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 		IODMACommand *		_dmaCommand;
 		IOUSBIsocCompletion	_uslCompletion;
 		bool				_lowLatency;
+#endif
     };
     ExpansionData * 		_expansionData;
 
@@ -223,10 +239,12 @@ public:
     void					SetUseTimeStamp(bool useIt)							{ _expansionData->_useTimeStamp= useIt; }
     void					SetTimeStamp(AbsoluteTime timeStamp)				{ _expansionData->_timeStamp= timeStamp; }
  	void					SetIsSyncTransfer(bool isSync)						{ _expansionData->_isSyncTransfer = isSync; }
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
  	void					SetRosettaClient(bool isRosetta)					{ _expansionData->_rosettaClient = isRosetta; }
  	void					SetDMACommand(IODMACommand *dmaCommand)				{ _expansionData->_dmaCommand = dmaCommand; }
     void					SetUSLCompletion(IOUSBIsocCompletion completion)	{ _expansionData->_uslCompletion = completion; }
  	void					SetLowLatency(bool lowLatency)						{ _expansionData->_lowLatency = lowLatency; }
+#endif
 
 	// Accessors
     usbCommand				GetSelector(void)								{ return _selector; }
@@ -243,10 +261,12 @@ public:
     bool					GetUseTimeStamp(void)							{ return _expansionData->_useTimeStamp; }
     AbsoluteTime			GetTimeStamp(void)								{ return _expansionData->_timeStamp; }
 	bool					GetIsSyncTransfer(void)							{ return _expansionData->_isSyncTransfer; }
+ #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	bool					GetIsRosettaClient(void)						{ return _expansionData->_rosettaClient; }
 	IODMACommand *			GetDMACommand(void)								{ return _expansionData->_dmaCommand; }
     IOUSBIsocCompletion		GetUSLCompletion(void)							{ return _expansionData->_uslCompletion; }
 	bool					GetLowLatency(void)								{ return _expansionData->_lowLatency; }
+#endif
 };
 
 class IOUSBCommandPool : public IOCommandPool
