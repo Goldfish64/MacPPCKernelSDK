@@ -31,6 +31,12 @@
 #include <IOKit/hidsystem/IOHIDDescriptorParser.h>
 #include <IOKit/hid/IOHIDKeys.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class   IOHIDSystem;
 class   IOHIDPointing;
 class   IOHIDKeyboard;
@@ -546,6 +552,7 @@ public:
                                          IOHIDElementCookie cookie,
                                          bool *             isActive );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 /*! @function updateElementValues
     @abstract Updates element values from a HID device via getReport.
     @discussion A completion parameter may be added in the future.
@@ -582,6 +589,14 @@ public:
     OSMetaClassDeclareReservedUsed(IOHIDDevice,  3);
     virtual OSNumber * newLocationIDNumber() const;
 
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 0);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 1);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 2);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 3);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 /*! @function getReport
     @abstract Get a report from the HID device.
     @discussion A completion parameter may be added in the future.
@@ -631,7 +646,7 @@ public:
     on the object returned. */
     OSMetaClassDeclareReservedUsed(IOHIDDevice,  6);
     virtual OSNumber * newVendorIDSourceNumber() const;
-    
+
 /*! @function newCountryCodeNumber
     @abstract Returns a number object that describes the country code
     of the HID device.  
@@ -657,7 +672,15 @@ public:
                      IOMemoryDescriptor * report,
 	                 IOHIDReportType      reportType = kIOHIDReportTypeInput,
 	                 IOOptionBits         options    = 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 4);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 5);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 6);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 7);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 8);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 /*! @function newReportInterval
     @abstract Returns a number object that describes the actual polling
     interval of the HID device in microseconds.  
@@ -665,6 +688,9 @@ public:
     on the object returned. */
     OSMetaClassDeclareReservedUsed(IOHIDDevice,  9);
     virtual OSNumber * newReportIntervalNumber() const;
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 9);
+#endif
     
     OSMetaClassDeclareReservedUnused(IOHIDDevice, 10);
     OSMetaClassDeclareReservedUnused(IOHIDDevice, 11);
