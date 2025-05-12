@@ -36,9 +36,11 @@ class IOUSBWorkLoop : public IOWorkLoop
     
 protected:
     void *			fSleepToken;
+/*
 #ifndef __OPEN_SOURCE__
 	lck_grp_t *		fLockGroup;
 #endif
+*/
 	bool init ( const char * controllerLocation );
 	void free ( void );
 	
