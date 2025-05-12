@@ -316,8 +316,11 @@ public:
     static void initialize();
 
     virtual bool requestTerminate( IOService * provider, IOOptionBits options );
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual IOService * probe( IOService * provider, SInt32 * score );
+#endif
     virtual bool start( IOService * provider );
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual void stop( IOService * provider );
     virtual void free();
     virtual IOWorkLoop * getWorkLoop() const;
@@ -326,12 +329,15 @@ public:
     IOWorkLoop * getControllerWorkLoop() const;
 
     virtual IOReturn requestProbe( IOOptionBits options );
+#endif
 
     virtual IOReturn powerStateWillChangeTo ( IOPMPowerFlags, unsigned long, IOService* );
     virtual IOReturn powerStateDidChangeTo ( IOPMPowerFlags, unsigned long, IOService* );
     virtual IOReturn setPowerState( unsigned long powerStateOrdinal, IOService * device);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual IOReturn setAggressiveness( unsigned long type, unsigned long newLevel );
     virtual IOReturn getAggressiveness( unsigned long type, unsigned long * currentLevel );
+#endif
     virtual IOReturn newUserClient( task_t              owningTask,
                                     void *              security_id,
                                     UInt32              type,
