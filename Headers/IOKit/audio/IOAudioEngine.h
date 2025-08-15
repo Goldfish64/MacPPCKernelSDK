@@ -36,6 +36,12 @@
 #endif
 #include <IOKit/IOBufferMemoryDescriptor.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSDictionary;
 class OSCollection;
 class OSOrderedSet;
@@ -247,8 +253,12 @@ protected:
 //	static UInt32	sInstanceCount;	
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 0);
     virtual IOReturn performFormatChange(IOAudioStream *audioStream, const IOAudioStreamFormat *newFormat, const IOAudioStreamFormatExtension *formatExtension, const IOAudioSampleRate *newSampleRate);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 1);
 	virtual IOBufferMemoryDescriptor * getStatusDescriptor();
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 2);
@@ -257,6 +267,9 @@ public:
 	virtual IOBufferMemoryDescriptor * getBytesInInputBufferArrayDescriptor();
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 4);
 	virtual IOBufferMemoryDescriptor * getBytesInOutputBufferArrayDescriptor();
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 5);
     /*!
 	 * @function eraseOutputSamples
@@ -332,12 +345,16 @@ public:
 	 * @param numSamples size of offset in sample
 	 */
     virtual void setOutputSampleOffset(UInt32 numSamples);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 protected:
 	
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 12);
     virtual IOReturn createUserClient(task_t task, void *securityID, UInt32 type, IOAudioEngineUserClient **newUserClient, OSDictionary *properties);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 public:
 	
 	// OSMetaClassDeclareReservedUsed(IOAudioEngine, 13);
@@ -362,13 +379,26 @@ public:
 	 */
 	
     virtual IOReturn getAttributeForConnection( SInt32 connectIndex, UInt32 attribute, uintptr_t * value );
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 0);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 0);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 1);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 2);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 3);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 4);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 1);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 2);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 3);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 4);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 5);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 6);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 7);
@@ -376,9 +406,27 @@ private:
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 9);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 10);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 11);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 5);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 6);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 7);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 8);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 9);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 10);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 11);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 12);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 12);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 13);
 	OSMetaClassDeclareReservedUsed(IOAudioEngine, 14);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 13);
+	OSMetaClassDeclareReservedUnused(IOAudioEngine, 14);
+#endif
 
 	OSMetaClassDeclareReservedUnused(IOAudioEngine, 15);
 	OSMetaClassDeclareReservedUnused(IOAudioEngine, 16);

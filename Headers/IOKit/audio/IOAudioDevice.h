@@ -37,6 +37,12 @@
 #include "IOAudioStream.h"
 #endif
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOAudioEngine;
 class IOAudioStream;
 class IOAudioPort;
@@ -190,6 +196,7 @@ public:
 	static void idleAudioSleepHandlerTimer(OSObject *owner, IOTimerEventSource *sender);
 	virtual IOReturn setAggressiveness(unsigned long type, unsigned long newLevel);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	// OSMetaClassDeclareReservedUsed(IOAudioDevice, 0);
 	virtual void setDeviceTransportType(const UInt32 transportType);
 
@@ -210,7 +217,9 @@ public:
 
 	// OSMetaClassDeclareReservedUsed(IOAudioDevice, 2);
 	virtual void scheduleIdleAudioSleep(void);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	// OSMetaClassDeclareReservedUsed(IOAudioDevice, 3);
     /*!
 	 * @function setConfigurationApplicationBundle
@@ -221,7 +230,9 @@ public:
      * @param bundleID The bundle ID of the application to be launched by the HAL for configuration of the device and its engine(s).
      */
 	virtual void setConfigurationApplicationBundle(const char *bundleID);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	// OSMetaClassDeclareReservedUsed(IOAudioDevice, 4);
     /*!
 	 * @function setDeviceCanBeDefault
@@ -237,14 +248,30 @@ public:
 
 	// OSMetaClassDeclareReservedUsed(IOAudioDevice, 5);
 	virtual void setDeviceModelName(const char * modelName);
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	OSMetaClassDeclareReservedUsed(IOAudioDevice, 0);
 	OSMetaClassDeclareReservedUsed(IOAudioDevice, 1);
 	OSMetaClassDeclareReservedUsed(IOAudioDevice, 2);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioDevice, 0);
+	OSMetaClassDeclareReservedUnused(IOAudioDevice, 1);
+	OSMetaClassDeclareReservedUnused(IOAudioDevice, 2);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	OSMetaClassDeclareReservedUsed(IOAudioDevice, 3);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioDevice, 3);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	OSMetaClassDeclareReservedUsed(IOAudioDevice, 4);
 	OSMetaClassDeclareReservedUsed(IOAudioDevice, 5);
+#else
+	OSMetaClassDeclareReservedUnused(IOAudioDevice, 4);
+	OSMetaClassDeclareReservedUnused(IOAudioDevice, 5);
+#endif
 
 	OSMetaClassDeclareReservedUnused(IOAudioDevice, 6);
 	OSMetaClassDeclareReservedUnused(IOAudioDevice, 7);
