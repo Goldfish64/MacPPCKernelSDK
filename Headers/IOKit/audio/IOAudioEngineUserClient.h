@@ -33,6 +33,12 @@
 #endif
 #include <IOKit/IOBufferMemoryDescriptor.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOAudioEngine;
 class IOAudioStream;
 class IOMemoryDescriptor;
@@ -125,16 +131,23 @@ class IOAudioEngineUserClient : public IOUserClient
 		virtual IOReturn externalMethod( uint32_t selector, IOExternalMethodArguments * arguments, 	IOExternalMethodDispatch * dispatch, 
 										OSObject * target, 	void * reference);
 		// New code added here...
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 0);	
 		virtual IOReturn registerClientParameterBuffer (void * parameterBuffer, UInt32 bufferSetID);  // unused function
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 1);	
 		virtual IOAudioClientBufferExtendedInfo * findExtendedInfo(UInt32 bufferSetID);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 2);	
 		virtual IOReturn getNearestStartTime(IOAudioStream *audioStream, IOAudioTimeStamp *ioTimeStamp, UInt32 isInput);
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 3);	
 		virtual IOReturn getClientNearestStartTime(IOAudioStream *audioStream, IOAudioTimeStamp *ioTimeStamp, UInt32 isInput);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 4);	
 		virtual IOReturn safeRegisterClientBuffer(UInt32 audioStreamIndex, void * sourceBuffer, UInt32 bufSizeInBytes, UInt32 bufferSetID);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 5);	
 		virtual bool initWithAudioEngine(IOAudioEngine *engine, task_t task, void *securityToken, UInt32 type, OSDictionary *properties);	
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 6);	<rdar://problems/5321701>
@@ -149,15 +162,31 @@ class IOAudioEngineUserClient : public IOUserClient
 		virtual IOReturn unregisterClientBuffer64(mach_vm_address_t  * sourceBuffer, UInt32 bufferSetID);
 		// OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 11);	 <rdar://problems/5321701>
 		virtual IOAudioClientBufferExtendedInfo64 * findExtendedInfo64(UInt32 bufferSetID);
+#endif
 	
 		
 		
 	private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 0);
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 1);
+#else
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 0);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 1);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 2);
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 3);
+#else
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 2);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 3);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 4);
+#else
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 4);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 5);
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 6);
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 7);
@@ -165,6 +194,15 @@ class IOAudioEngineUserClient : public IOUserClient
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 9);
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 10);
 		OSMetaClassDeclareReservedUsed(IOAudioEngineUserClient, 11);
+#else
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 5);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 6);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 7);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 8);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 9);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 10);
+		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 11);
+#endif
 		
 		
 		OSMetaClassDeclareReservedUnused(IOAudioEngineUserClient, 12);

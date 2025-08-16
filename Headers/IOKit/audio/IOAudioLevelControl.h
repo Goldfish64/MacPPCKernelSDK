@@ -29,6 +29,12 @@
 #include "IOAudioControl.h"
 #endif
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSArray;
 
 /*!
@@ -64,6 +70,7 @@ public:
                                                                 const char *channelName,
                                                                 UInt32 cntrlID);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	// OSMetaClassDefineReservedUnused(IOAudioLevelControl, 0);
     /*!
 	 * @function setLinearScale
@@ -72,9 +79,14 @@ public:
 	 * FALSE instructs CoreAudio to apply a curve, which is CoreAudio's default behavior.
      */
 	virtual void setLinearScale(bool useLinearScale);
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IOAudioLevelControl, 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioLevelControl, 0);
+#endif
 
     OSMetaClassDeclareReservedUnused(IOAudioLevelControl, 1);
     OSMetaClassDeclareReservedUnused(IOAudioLevelControl, 2);

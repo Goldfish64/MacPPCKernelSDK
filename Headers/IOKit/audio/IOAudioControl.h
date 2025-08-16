@@ -30,6 +30,12 @@
 #include "IOAudioEngine.h"
 #endif
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOAudioPort;
 class OSDictionary;
 class OSSet;
@@ -160,9 +166,12 @@ protected:
     ExpansionData *reserved;
     
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	// OSMetaClassDeclareReservedUsed(IOAudioControl, 0);
 	virtual void sendChangeNotification(UInt32 notificationType);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	// OSMetaClassDeclareReservedUsed(IOAudioControl, 1);
     /*!
 	 * @function setReadOnlyFlag
@@ -171,10 +180,14 @@ public:
 	 * do not use this call but instead return an error from the control handler.
      */
 	virtual void setReadOnlyFlag();
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	// OSMetaClassDeclareReservedUsed(IOAudioControl, 2);
 	virtual void sendQueuedNotifications(void);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	// OSMetaClassDeclareReservedUsed(IOAudioControl, 3);
     /*!
      * @function createUserClient
@@ -194,12 +207,29 @@ public:
      * @result Returns kIOReturnSuccess on success.
      */
     virtual IOReturn createUserClient(task_t task, void *securityID, UInt32 type, IOAudioControlUserClient **newUserClient, OSDictionary *properties);
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOAudioControl, 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioControl, 0);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOAudioControl, 1);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioControl, 1);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IOAudioControl, 2);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioControl, 2);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     OSMetaClassDeclareReservedUsed(IOAudioControl, 3);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioControl, 3);
+#endif
 
     OSMetaClassDeclareReservedUnused(IOAudioControl, 4);
     OSMetaClassDeclareReservedUnused(IOAudioControl, 5);

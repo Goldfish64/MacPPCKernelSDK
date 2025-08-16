@@ -32,6 +32,12 @@
 #include "IOAudioTypes.h"
 #endif
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSSymbol;
 class OSArray;
 class OSDictionary;
@@ -140,6 +146,7 @@ protected:
 
 public:
 // New code added here:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 0);
     virtual const IOAudioStreamFormatExtension *getFormatExtension();
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 1);
@@ -156,16 +163,22 @@ public:
 	virtual void setTerminalType(const UInt32 terminalType);
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 7);
 	virtual IOReturn mixOutputSamples(const void *sourceBuf, void *mixBuf, UInt32 firstSampleFrame, UInt32 numSampleFrames, const IOAudioStreamFormat *streamFormat, IOAudioStream *audioStream);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 8);
 	virtual void setSampleLatency(UInt32 numSamples);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 9);
 	virtual bool validateFormat(IOAudioStreamFormat *streamFormat, IOAudioStreamFormatExtension *formatExtension, IOAudioStreamFormatDesc *formatDesc, const IOAudioSampleRate *sampleRate);
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 10);
 	virtual UInt32 getNumSampleFramesRead();
 	// OSMetaClassDeclareReservedUsed(IOAudioStream, 11);
 	virtual void setDefaultNumSampleFramesRead(UInt32);
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOAudioStream, 0);
     OSMetaClassDeclareReservedUsed(IOAudioStream, 1);
     OSMetaClassDeclareReservedUsed(IOAudioStream, 2);
@@ -174,10 +187,30 @@ private:
     OSMetaClassDeclareReservedUsed(IOAudioStream, 5);
     OSMetaClassDeclareReservedUsed(IOAudioStream, 6);
     OSMetaClassDeclareReservedUsed(IOAudioStream, 7);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 0);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 1);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 2);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 3);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 4);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 5);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 6);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 7);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOAudioStream, 8);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 8);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IOAudioStream, 9);
     OSMetaClassDeclareReservedUsed(IOAudioStream, 10);
     OSMetaClassDeclareReservedUsed(IOAudioStream, 11);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 9);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 10);
+    OSMetaClassDeclareReservedUnused(IOAudioStream, 11);
+#endif
 
     OSMetaClassDeclareReservedUnused(IOAudioStream, 12);
     OSMetaClassDeclareReservedUnused(IOAudioStream, 13);

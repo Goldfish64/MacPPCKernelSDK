@@ -29,6 +29,12 @@
 #include "IOAudioControl.h"
 #endif
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSString;
 class OSArray;
 
@@ -61,17 +67,25 @@ public:
                                                                     const char *channelName = 0,
                                                                     UInt32 cntrlID = 0);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     // OSMetaClassDeclareReservedUsed(IOAudioSelectorControl, 0);
 	virtual IOReturn removeAvailableSelection(SInt32 selectionValue);
     // OSMetaClassDeclareReservedUsed(IOAudioSelectorControl, 1);
 	virtual IOReturn replaceAvailableSelection(SInt32 selectionValue, const char *selectionDescription);
     // OSMetaClassDeclareReservedUsed(IOAudioSelectorControl, 2);
 	virtual IOReturn replaceAvailableSelection(SInt32 selectionValue, OSString *selectionDescription);
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOAudioSelectorControl, 0);
     OSMetaClassDeclareReservedUsed(IOAudioSelectorControl, 1);
     OSMetaClassDeclareReservedUsed(IOAudioSelectorControl, 2);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioSelectorControl, 0);
+    OSMetaClassDeclareReservedUnused(IOAudioSelectorControl, 1);
+    OSMetaClassDeclareReservedUnused(IOAudioSelectorControl, 2);
+#endif
 
     OSMetaClassDeclareReservedUnused(IOAudioSelectorControl, 3);
     OSMetaClassDeclareReservedUnused(IOAudioSelectorControl, 4);

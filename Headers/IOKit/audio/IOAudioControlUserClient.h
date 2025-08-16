@@ -31,6 +31,12 @@
 #include "IOAudioTypes.h"
 #endif
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOAudioControl;
 
 class IOAudioControlUserClient : public IOUserClient
@@ -51,13 +57,26 @@ protected:
     ExpansionData *reserved;
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 	virtual void sendChangeNotification(UInt32 notificationType);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     // OSMetaClassDeclareReservedUsed(IOAudioControlUserClient, 1);
     virtual bool initWithAudioControl(IOAudioControl *control, task_t owningTask, void *securityID, UInt32 type, OSDictionary *properties);
+#endif
 
 private:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOAudioControlUserClient, 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioControlUserClient, 0);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     OSMetaClassDeclareReservedUsed(IOAudioControlUserClient, 1);
+#else
+    OSMetaClassDeclareReservedUnused(IOAudioControlUserClient, 1);
+#endif
 
     OSMetaClassDeclareReservedUnused(IOAudioControlUserClient, 2);
     OSMetaClassDeclareReservedUnused(IOAudioControlUserClient, 3);
