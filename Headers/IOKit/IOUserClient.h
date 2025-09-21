@@ -37,6 +37,12 @@
 #include <IOKit/IOService.h>
 #include <IOKit/OSMessageNotification.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 
 enum {
     kIOUCTypeMask	= 0x0000000f,
@@ -97,6 +103,8 @@ enum {
 #define kIOClientPrivilegeLocalUser	"local"
 #define kIOClientPrivilegeForeground	"foreground"
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
+
 /*! @enum
     @abstract Constants to specify the maximum number of scalar arguments in the IOExternalMethodArguments structure. These constants are documentary since the scalarInputCount, scalarOutputCount fields reflect the actual number passed.
     @constant kIOExternalMethodScalarInputCountMax The maximum number of scalars able to passed on input.
@@ -154,6 +162,8 @@ enum {
     kIOExternalMethodArgumentsCurrentVersion = IO_EXTERNAL_METHOD_ARGUMENTS_CURRENT_VERSION
 };
 
+#endif
+
 
 /*!
     @class IOUserClient
@@ -183,19 +193,31 @@ private:
     void  * __reserved[7];
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
    virtual IOReturn externalMethod( uint32_t selector, IOExternalMethodArguments * arguments,
 					IOExternalMethodDispatch * dispatch = 0, OSObject * target = 0, void * reference = 0 );
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
    virtual IOReturn registerNotificationPort(
 					mach_port_t port, UInt32 type, io_user_reference_t refCon);
+#endif
 
 private:
 #if __LP64__
     OSMetaClassDeclareReservedUnused(IOUserClient, 0);
     OSMetaClassDeclareReservedUnused(IOUserClient, 1);
 #else
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     OSMetaClassDeclareReservedUsed(IOUserClient, 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOUserClient, 0);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
     OSMetaClassDeclareReservedUsed(IOUserClient, 1);
+#else
+    OSMetaClassDeclareReservedUnused(IOUserClient, 1);
+#endif
 #endif
     OSMetaClassDeclareReservedUnused(IOUserClient, 2);
     OSMetaClassDeclareReservedUnused(IOUserClient, 3);
