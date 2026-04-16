@@ -1013,6 +1013,7 @@ protected:
     virtual void release(int freeWhen) const;
 
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
    /*!
     * @function taggedRetain
     *
@@ -1065,6 +1066,7 @@ protected:
     virtual void taggedRelease(
         const void * tag,
         const int    freeWhen) const;
+#endif
 
 
    /*!
