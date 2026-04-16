@@ -40,7 +40,11 @@ Boston, MA 02111-1307, USA.  */
 
 #ifndef __GNUC_VA_LIST
 #define __GNUC_VA_LIST
+#if (__GNUC__ > 2)
 typedef __builtin_va_list __gnuc_va_list;
+#else
+typedef char *__gnuc_va_list;
+#endif
 #endif
 
 /* Define the standard macros for the user,
