@@ -36,6 +36,12 @@ HISTORY
 
 #include <libkern/c++/OSMetaClass.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSSymbol;
 class OSString;
 
@@ -198,6 +204,7 @@ protected:
     */
     virtual void release(int freeWhen) const;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
    /*!
     * @function taggedRelease
     *
@@ -224,6 +231,7 @@ protected:
     * In general, however, it should be avoided.
     */
     virtual void taggedRelease(const void * tag, const int freeWhen) const;
+#endif
 
 
    /*!
@@ -353,6 +361,7 @@ public:
     virtual void release() const;
 
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
    /*!
     * @function taggedRetain
     *
@@ -391,6 +400,7 @@ public:
     */
     virtual void taggedRelease(const void * tag = 0) const;
     // xx-review: used to say, "Remove a reference on this object with this tag, if an attempt is made to remove a reference that isn't associated with this tag the kernel will panic immediately", but I don't see that in the implementation
+#endif
 
 
    /*!

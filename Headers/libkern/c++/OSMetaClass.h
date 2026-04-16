@@ -33,6 +33,12 @@
 #include <libkern/OSReturn.h>
 #include <kern/debug.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSMetaClass;
 class OSObject;
 class OSString;
@@ -734,6 +740,7 @@ public:
 
 public:
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
    /*!
     * @function taggedRetain
     *
@@ -791,6 +798,12 @@ protected:
     virtual void taggedRelease(
         const void * tag,
         const int    freeWhen) const = 0;
+#else
+private:
+    virtual void _RESERVEDOSMetaClassBase0();
+    virtual void _RESERVEDOSMetaClassBase1();
+    virtual void _RESERVEDOSMetaClassBase2();
+#endif
 
 private:
     // Virtual Padding

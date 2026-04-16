@@ -33,6 +33,12 @@
 
 #include <libkern/c++/OSString.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 /*!
  * @header
  *
@@ -152,6 +158,7 @@ private:
 
 protected:
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 // xx-review: should we just omit this from headerdoc?
    /*!
     * @function taggedRelease
@@ -175,6 +182,7 @@ protected:
     virtual void taggedRelease(
         const void * tag,
         const int    freeWhen) const;
+#endif
 
 
 // xx-review: should we just omit this from headerdoc?
@@ -197,6 +205,7 @@ protected:
 
 public:
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
 // xx-review: should we just omit this from headerdoc?
    /*!
     * @function taggedRelease
@@ -228,6 +237,7 @@ public:
     * OSObject::taggedRelease(const void *, const int)@/link</code>.
     */
     virtual void taggedRelease(const void * tag) const;
+#endif
 
 
    /*!

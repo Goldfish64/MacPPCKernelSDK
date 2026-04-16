@@ -36,6 +36,12 @@
 
 #include <mach/memory_object_types.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOMemoryMap;
 class IOMapper;
 
@@ -605,7 +611,9 @@ class IOMemoryMap : public OSObject
     OSDeclareDefaultStructors(IOMemoryMap)
 
 protected:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     virtual void taggedRelease(const void *tag = 0) const;
+#endif
     virtual void free();
 
 public:

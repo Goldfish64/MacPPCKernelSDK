@@ -32,6 +32,12 @@
 
 #include <libkern/c++/OSObject.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class OSString;
 
 /*!
@@ -67,6 +73,7 @@ class OSBoolean : public OSObject
 protected:
     bool value;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
    /*!
     * @function taggedRelease
     *
@@ -80,6 +87,7 @@ protected:
     virtual void taggedRelease(
         const void * tag,
         const int    when) const;
+#endif
 
 public:
     static void initialize();
