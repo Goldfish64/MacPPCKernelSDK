@@ -51,6 +51,7 @@ typedef char *__gnuc_va_list;
    if this invocation was from the user program.  */
 #ifdef _STDARG_H
 
+#if (__GNUC__ > 2)
 #define va_start(v,l)	__builtin_va_start(v,l)
 #define va_end(v)	__builtin_va_end(v)
 #define va_arg(v,l)	__builtin_va_arg(v,l)
@@ -58,6 +59,14 @@ typedef char *__gnuc_va_list;
 #define va_copy(d,s)	__builtin_va_copy(d,s)
 #endif
 #define __va_copy(d,s)	__builtin_va_copy(d,s)
+#else
+#define va_start(AP, LASTARG) 						\
+ (AP = ((__gnuc_va_list) __builtin_next_arg (LASTARG)))
+
+#undef va_end
+void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
+#define va_end(AP)	((void)0)
+#endif
 
 /* Define va_list, if desired, from __gnuc_va_list. */
 /* We deliberately do not define va_list when called from
