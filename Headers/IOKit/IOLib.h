@@ -49,6 +49,12 @@
 
 #include <libkern/OSAtomic.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 __BEGIN_DECLS
 
 #include <kern/thread_call.h>
@@ -295,6 +301,7 @@ void IOPause(unsigned nanoseconds);
 void IOLog(const char *format, ...)
 __attribute__((format(printf, 1, 2)));
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function IOLogv
     @abstract Log a message to console in text mode, and /var/log/system.log.
     @discussion This function allows a driver to log diagnostic information to the screen during verbose boots, and to a log file found at /var/log/system.log. IOLogv should not be called from interrupt context.
@@ -302,6 +309,7 @@ __attribute__((format(printf, 1, 2)));
     @param ap stdarg(3) style variable arguments. */
 
 void IOLogv(const char *format, va_list ap);
+#endif
 
 #ifndef _FN_KPRINTF
 #define	_FN_KPRINTF
