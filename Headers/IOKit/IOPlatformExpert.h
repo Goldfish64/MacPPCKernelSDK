@@ -172,13 +172,19 @@ public:
     virtual bool hasPrivPMFeature (unsigned long privFeatureMask);
     virtual int  numBatteriesSupported (void);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     virtual IOByteCount savePanicInfo(UInt8 *buffer, IOByteCount length);
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual OSString* createSystemSerialNumberString(OSData* myProperty);
 #endif
-    
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOPlatformExpert,  0);
+#else
+    OSMetaClassDeclareReservedUnused(IOPlatformExpert,  0);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
 	OSMetaClassDeclareReservedUsed(IOPlatformExpert, 1);
 #else
@@ -247,6 +253,7 @@ public:
 	IORegistryEntry * entry,
 	const OSSymbol * name, OSData * value );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     // This returns a dictionary describing all the NVRAM partitions.
     // The keys will be the partitionIDs of the form "0x52,nvram".
     // The values will be OSNumbers of the partition's byte count.
@@ -261,6 +268,7 @@ public:
 					       IOByteCount length);
 
     virtual IOByteCount savePanicInfo(UInt8 *buffer, IOByteCount length);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual OSString* createSystemSerialNumberString(OSData* myProperty);
 #endif
