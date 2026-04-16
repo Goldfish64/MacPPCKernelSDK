@@ -81,7 +81,7 @@ __BEGIN_DECLS
 
 extern void panic(const char *string, ...) __printflike(1,2);
 
-
+#if (__GNUC__ > 2)
 #if CONFIG_NO_PANIC_STRINGS
 #define panic_plain(...) (panic)((char *)0)
 #define panic(...)  (panic)((char *)0)
@@ -94,6 +94,7 @@ extern void panic(const char *string, ...) __printflike(1,2);
 #define panic(ex, ...) \
 	(panic)(# ex "@" PANIC_LOCATION, ## __VA_ARGS__)
 #endif /* CONFIGS_NO_PANIC_STRINGS */
+#endif
 
 void 		populate_model_name(char *);
 unsigned	panic_active(void);
