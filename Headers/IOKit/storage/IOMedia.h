@@ -350,9 +350,10 @@ protected:
     virtual void handleClose(IOService * client, IOOptionBits options);
 
 public:
-
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     using IOStorage::read;
     using IOStorage::write;
+#endif
 
 #ifndef __LP64__
     virtual bool init(UInt64         base,
@@ -595,6 +596,7 @@ public:
 
     virtual const char * getContentHint() const;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     /*!
      * @function init
      * @discussion
@@ -639,13 +641,19 @@ public:
      */
 
     virtual IOMediaAttributeMask getAttributes() const; /* 10.2.0 */
+#endif
 
 #ifdef __LP64__
     OSMetaClassDeclareReservedUnused(IOMedia,  0);
     OSMetaClassDeclareReservedUnused(IOMedia,  1);
 #else /* !__LP64__ */
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOMedia,  0);
     OSMetaClassDeclareReservedUsed(IOMedia,  1);
+#else
+    OSMetaClassDeclareReservedUnused(IOMedia,  0);
+    OSMetaClassDeclareReservedUnused(IOMedia,  1);
+#endif
 #endif /* !__LP64__ */
     OSMetaClassDeclareReservedUnused(IOMedia,  2);
     OSMetaClassDeclareReservedUnused(IOMedia,  3);
