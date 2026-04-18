@@ -960,7 +960,8 @@ public:
 
     OSMetaClassDeclareReservedUsed(IOUSBController,  11);
     virtual IOReturn CreateRootHubDevice( IOService * provider, IOUSBRootHubDevice ** rootHubDevice);
-    
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOUSBController,  12);
     /*!
         @function Read
@@ -1004,7 +1005,12 @@ public:
     OSMetaClassDeclareReservedUsed(IOUSBController,  14);
     
     virtual IOReturn GetRootHubStringDescriptor(UInt8	index, OSData *desc) = 0;
-    
+#else
+    OSMetaClassDeclareReservedUnused(IOUSBController,  12);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  13);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  14);
+#endif
+
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOUSBController,  15);
     /*!
