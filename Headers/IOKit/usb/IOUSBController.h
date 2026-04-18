@@ -958,10 +958,10 @@ protected:
 
 public:
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOUSBController,  11);
     virtual IOReturn CreateRootHubDevice( IOService * provider, IOUSBRootHubDevice ** rootHubDevice);
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_2
     OSMetaClassDeclareReservedUsed(IOUSBController,  12);
     /*!
         @function Read
@@ -1006,6 +1006,7 @@ public:
     
     virtual IOReturn GetRootHubStringDescriptor(UInt8	index, OSData *desc) = 0;
 #else
+    OSMetaClassDeclareReservedUnused(IOUSBController,  11);
     OSMetaClassDeclareReservedUnused(IOUSBController,  12);
     OSMetaClassDeclareReservedUnused(IOUSBController,  13);
     OSMetaClassDeclareReservedUnused(IOUSBController,  14);
