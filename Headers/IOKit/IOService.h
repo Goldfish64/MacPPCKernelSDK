@@ -620,10 +620,12 @@ public:
     
     virtual bool finalize( IOOptionBits options );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
 /*! @function free
     @abstract Frees data structures that were allocated when power management was initialized on this service. */
     
     virtual void free( void );
+#endif
 
 /*! @function lockForArbitration
     @abstract Locks an IOService object against changes in state or ownership.
@@ -1012,12 +1014,14 @@ public:
 
     static IOPlatformExpert * getPlatform( void );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
 /*! @function getPMRootDomain
     @abstract Returns a pointer to the power management root domain instance for the computer.
     @discussion This method provides an accessor to the power management root domain instance for the computer. 
     @result A pointer to the power management root domain instance. It should not be released by the caller. */
 
     static class IOPMrootDomain * getPMRootDomain( void );
+#endif
 
 /*! @function getServiceRoot
     @abstract Returns a pointer to the root of the service plane.
