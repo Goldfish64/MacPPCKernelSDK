@@ -315,7 +315,9 @@ private:
 public:
     static void initialize();
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     virtual bool requestTerminate( IOService * provider, IOOptionBits options );
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual IOService * probe( IOService * provider, SInt32 * score );
 #endif
@@ -342,10 +344,12 @@ public:
                                     void *              security_id,
                                     UInt32              type,
                                     IOUserClient **     handler );
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     virtual IOReturn callPlatformFunction( const OSSymbol * functionName,
                                     bool waitForFunction,
                                     void *p1, void *p2,
                                     void *p3, void *p4 );
+#endif
 
     virtual void hideCursor( void );
     virtual void showCursor( IOGPoint * cursorLoc, int frame );
