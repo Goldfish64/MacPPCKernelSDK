@@ -91,6 +91,7 @@ private:
     OSDictionary *	fPropertyTable;
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     /* methods available in Mac OS X 10.1 or later */
 
 /*! @function copyProperty
@@ -150,6 +151,7 @@ public:
     @result Returns the first child of the registry entry, or zero if the entry is not attached into the registry in that plane. A reference on the entry is returned to caller, which should be released. */
 
     virtual IORegistryEntry * copyChildEntry( const IORegistryPlane * plane ) const;
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     /* method available in Mac OS X 10.4 or later */
@@ -195,11 +197,19 @@ private:
     OSMetaClassDeclareReservedUnused(IORegistryEntry, 4);
     OSMetaClassDeclareReservedUnused(IORegistryEntry, 5);
 #else
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 0);
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 1);
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 2);
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 3);
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 4);
+#else
+    OSMetaClassDeclareReservedUnused(IORegistryEntry, 0);
+    OSMetaClassDeclareReservedUnused(IORegistryEntry, 1);
+    OSMetaClassDeclareReservedUnused(IORegistryEntry, 2);
+    OSMetaClassDeclareReservedUnused(IORegistryEntry, 3);
+    OSMetaClassDeclareReservedUnused(IORegistryEntry, 4);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IORegistryEntry, 5);
 #else

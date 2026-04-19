@@ -43,6 +43,12 @@ extern "C" {
 #include <IOKit/IOService.h>
 #include <IOKit/IOInterruptController.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 enum {
   kIOCPUStateUnregistered = 0,
   kIOCPUStateUninitalized,
@@ -79,9 +85,11 @@ public:
   static  void           initCPUs(void);
   
   virtual bool           start(IOService *provider);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
   virtual OSObject       *getProperty(const OSSymbol *aKey) const;
   virtual bool           setProperty(const OSSymbol *aKey, OSObject *anObject);
   virtual bool           serializeProperties(OSSerialize *serialize) const;
+#endif
   virtual IOReturn       setProperties(OSObject *properties);
   virtual void           initCPU(bool boot) = 0;
   virtual void           quiesceCPU(void) = 0;

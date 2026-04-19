@@ -319,6 +319,7 @@ public:
     void *          pm_vars;
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     /* methods available in Mac OS X 10.1 or later */
 /*! @function requestTerminate
     @abstract Passes a termination up the stack.
@@ -347,6 +348,7 @@ public:
     @result <code>true</code>. */
 
     virtual bool didTerminate( IOService * provider, IOOptionBits options, bool * defer );
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 /*! @function nextIdleTimeout
@@ -408,9 +410,15 @@ private:
 	OSMetaClassDeclareReservedUnused(IOService, 5);
 #endif
 #else
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     OSMetaClassDeclareReservedUsed(IOService, 0);
     OSMetaClassDeclareReservedUsed(IOService, 1);
     OSMetaClassDeclareReservedUsed(IOService, 2);
+#else
+    OSMetaClassDeclareReservedUnused(IOService, 0);
+    OSMetaClassDeclareReservedUnused(IOService, 1);
+    OSMetaClassDeclareReservedUnused(IOService, 2);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	OSMetaClassDeclareReservedUsed(IOService, 3);
 #else
