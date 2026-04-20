@@ -203,8 +203,10 @@ public:
     virtual void 		stop( IOService * provider );
     virtual bool 		finalize(IOOptionBits options);
     virtual IOReturn 	message( UInt32 type, IOService * provider,  void * argument = 0 );
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     virtual bool		didTerminate( IOService * provider, IOOptionBits options, bool * defer );
-	
+#endif
+
 protected:
 		
     IOReturn			getNubResources( IOService *  regEntry );
@@ -839,7 +841,8 @@ public:
                                             IOMemoryDescriptor *	CBP,
                                             bool			bufferRounding,
                                             UInt32			bufferSize);
-                                            
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     OSMetaClassDeclareReservedUsed(IOUSBController,  0);
     virtual void UIMCheckForTimeouts(void);
     
@@ -955,6 +958,20 @@ protected:
 */
     OSMetaClassDeclareReservedUsed(IOUSBController,  10);
     virtual void 		UIMRootHubStatusChange( bool abort ) = 0;
+#else
+    OSMetaClassDeclareReservedUnused(IOUSBController,  0);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  1);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  2);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  3);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  4);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  5);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  6);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  7);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  8);
+    OSMetaClassDeclareReservedUnused(IOUSBController,  9);
+protected:
+    OSMetaClassDeclareReservedUnused(IOUSBController,  10);
+#endif
 
 public:
 
