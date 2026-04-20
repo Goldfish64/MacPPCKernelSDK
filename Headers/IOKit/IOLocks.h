@@ -45,7 +45,13 @@
  #include <kern/simple_lock.h>
  #include <kern/sched_prim.h>
  #include <machine/machine_routines.h>
- 
+
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
  /*
   * Mutex lock operations
   */
@@ -74,7 +80,11 @@
  static __inline__
  void	IOLockLock( IOLock * lock)
  {
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
      mutex_lock(lock);
+#else
+     _mutex_lock(lock);
+#endif
  }
  
  /*! @function IOLockTryLock

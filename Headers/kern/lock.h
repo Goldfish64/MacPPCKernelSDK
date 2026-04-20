@@ -200,7 +200,9 @@
  
  extern void		mutex_lock(
            mutex_t			*mutex);
- 
+
+ extern void	_mutex_lock		(mutex_t*);
+
  extern void		mutex_unlock(
            mutex_t			*mutex);
  
