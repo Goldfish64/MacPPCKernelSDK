@@ -159,7 +159,9 @@ public:
     UInt8						GetType(void);
     bool						GetBufferRounding(void);
     IOMemoryDescriptor *		GetBuffer(void);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_1
     IOUSBCompletion				GetUSLCompletion(void);
+#endif
     IOUSBCompletion				GetClientCompletion(void);
     UInt32						GetDataRemaining(void);
     UInt8						GetStage(void);
