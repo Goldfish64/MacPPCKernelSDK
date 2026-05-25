@@ -35,6 +35,12 @@
 #include <IOKit/IOFilterInterruptEventSource.h>
 #include <IOKit/pci/IOAGPDevice.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -158,11 +164,15 @@ public:
     virtual IOReturn getDTNubAddressing( IOPCIDevice * nub );
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     virtual void free( void );
+#endif
 
     virtual bool start( IOService * provider );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     virtual void stop( IOService * provider );
+#endif
 
     virtual bool configure( IOService * provider );
 
@@ -223,18 +233,30 @@ public:
                                         IOOptionBits options );
 
 protected:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_3
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 0);
     virtual bool addBridgePrefetchableMemoryRange( IOPhysicalAddress start,
                                                    IOPhysicalLength length,
                                                    bool host );
+#else
+    OSMetaClassDeclareReservedUnused(IOPCIBridge,  0);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 1);
     virtual UInt32 extendedFindPCICapability( IOPCIAddressSpace space,
                                               UInt32 capabilityID, IOByteCount * offset = 0 );
+#else
+    OSMetaClassDeclareReservedUnused(IOPCIBridge,  1);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 2);
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
                                 IOService * client, IOOptionBits state);
+#else
+    OSMetaClassDeclareReservedUnused(IOPCIBridge,  2);
+#endif
 
     // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  3);
