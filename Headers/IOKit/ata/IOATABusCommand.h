@@ -33,6 +33,11 @@
 #include "IOATATypes.h"
 #include "IOATACommand.h"
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 class IOSyncer;
 
@@ -219,6 +224,8 @@ private:
     OSMetaClassDeclareReservedUnused(IOATABusCommand, 20);
 };
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
+
 #include <IOKit/IODMACommand.h>
 
 class IOATABusCommand64 : public IOATABusCommand
@@ -246,5 +253,7 @@ class IOATABusCommand64 : public IOATABusCommand
 	virtual bool init();  
 	virtual void free();
 };
+
+#endif
 
 #endif /*_IOATABUSCOMMAND_H*/
