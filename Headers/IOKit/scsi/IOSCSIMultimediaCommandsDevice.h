@@ -33,6 +33,12 @@
 
 #include <IOKit/storage/IOStorageDeviceCharacteristics.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 
 //-----------------------------------------------------------------------------
 //	Constants
@@ -951,6 +957,7 @@ public:
 										   void * 		messageArgument,
 										   vm_size_t 	argSize );
 	
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	/* Added with 10.3.3 */
 	OSMetaClassDeclareReservedUsed ( IOSCSIMultimediaCommandsDevice, 5 );
 	
@@ -959,11 +966,13 @@ protected:
 	
 	
 	virtual void AsyncReadWriteCompletion ( SCSITaskIdentifier completedTask );
-	
+#else
+    OSMetaClassDeclareReservedUnused ( IOSCSIMultimediaCommandsDevice, 5 );
+#endif
 	
 public:
 	
-	
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	/* Added with 10.5 */
     OSMetaClassDeclareReservedUsed ( IOSCSIMultimediaCommandsDevice, 6 );
 	
@@ -1022,8 +1031,12 @@ public:
 								SCSICmdField2Bit 			AGID,
 								SCSICmdField6Bit 			KEY_FORMAT,
 								SCSICmdField1Byte 			CONTROL					);
+#else
+    OSMetaClassDeclareReservedUnused ( IOSCSIMultimediaCommandsDevice, 6 );
+	OSMetaClassDeclareReservedUnused ( IOSCSIMultimediaCommandsDevice, 7 );
+#endif
 	
-	
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 protected:
 	
 	
@@ -1036,6 +1049,7 @@ public:
 	/* 10.6.0 */
 	
 	IOReturn	RequestIdle ( void );
+#endif
 	
 private:
 	
