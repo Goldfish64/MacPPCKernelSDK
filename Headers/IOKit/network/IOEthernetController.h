@@ -25,6 +25,12 @@
 
 #include <IOKit/network/IONetworkController.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 /*! @defined kIOEthernetControllerClass
     @abstract kIOEthernetControllerClass is the name of the
         IOEthernetController class. */
@@ -422,6 +428,7 @@ protected:
 
     virtual bool publishProperties();
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_4
 	/*! @function getVlanTagDemand
 		@abstract Fetch the demand for hardware vlan tag stuffing
 		for the given packet before it is transmitted on the network.
@@ -450,6 +457,10 @@ protected:
 
 	OSMetaClassDeclareReservedUsed( IOEthernetController,  1);
 	virtual void setVlanTag(mbuf_t m, UInt32 vlanTag);
+#else
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  0);
+	OSMetaClassDeclareReservedUnused( IOEthernetController,  1);
+#endif
 	
     // Virtual function padding
     OSMetaClassDeclareReservedUnused( IOEthernetController,  2);
