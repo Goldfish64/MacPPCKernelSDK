@@ -235,6 +235,12 @@ enum {
 #include <IOKit/network/IONetworkInterface.h>
 #include <IOKit/network/IOKernelDebugger.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class  IOCommandGate;
 class  IOOutputQueue;
 class  IONetworkMedium;
@@ -1059,6 +1065,7 @@ public:
                            UInt64                  speed        = 0,
                            OSData *                data         = 0);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 /*! @function systemWillShutdown
     @abstract Handles system shutdown and restart notifications.
     @discussion Overrides <code>IOService::systemWillShutdown</code> in order
@@ -1070,6 +1077,7 @@ public:
 */
 
     virtual void systemWillShutdown( IOOptionBits specifier );
+#endif
 
     /* Override IOService::setAggressiveness() */
 
